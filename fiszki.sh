@@ -24,7 +24,6 @@ display_help() {
     echo "      -f              Pokazuj obce słowa" # zmienna show_foreign = true
     echo "      -b              Wypowiadaj słowa wraz z wyświetleniem" # zmienna speak = true, show = true
     echo "      -o              Tylko wypowiadaj słowa, bez wyświetlenia" # zmienna speak = true, show = false
-    # ewentualnie przelacznik do inputu (stdin/ plik)
     exit 0
 }
 
@@ -61,6 +60,7 @@ shift $((OPTIND -1))
 
 if [$# -gt 0]; then
     # odczytuj slowka z pliku
+    # to trzeba dokonczyc
     exit 0
 else
     # odczytuj slowka z STDIN
@@ -70,6 +70,8 @@ else
     for ((i=0; i<total_words; i=i+1))
     do
         read line
+        # tutaj trzeba jakos zaimplementowac rozcinanie tej zmiennej line, np z filtrem cut, zeby byl dostep do slowka rodzimego i osobno obcego
+        
     done
 fi
 
