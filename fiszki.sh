@@ -97,23 +97,54 @@ main ()
     do
         if $show_foreign
         then 
+            # wyświetlaj w obcym języku
+            echo "Będę teraz wyświetlał słowa w obcym języku, wpisuj słowa w języku rodzimym"
+            echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
             echo $words_foreign[$i]
+            read current_word
+            if [[$current_word=="q"]]
+            then
+                # koniec gry
+                break
+            elif [[$current_word==$word_native[$i]]]
+                correct+=(1)
+                echo "Dobra odpowiedź!"
+            else
+                echo "Niestety nie tym razem, poprawna odpowiedź to: $words_native[$i]"
+            fi
         else
-
+            # wyswietlaj w rodzimym jezyku
+            echo "Będę teraz wyświetlał słowa w rodzimym języku, wpisuj słowa w języku obcym"
+            echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
+            echo $words_foreign[$i]
+            read current_word
+            if [[$current_word=="q"]]
+            then
+                # koniec gry
+                break
+            elif [[$current_word==$word_foreign[$i]]]
+                correct+=(1)
+                echo "Dobra odpowiedź!"
+            else
+                echo "Niestety nie tym razem, poprawna odpowiedź to: $words_foreign[$i]"
+            fi
         fi
     done
+    percentage=$((($correct/$total_words)*100))
+    wrong=$(($total_words-$correct))
+    if (($percentage>50))
+    then
+        echo "Super wynik!"
+    else
+        echo "Musisz się jeszcze pouczyć :("
+    fi
+    echo "Liczba poprawnych odpowiedzi: $correct"
+    echo "Liczba błędnych odpowiedzi: $wrong" 
+    echo "Twój wynik procentowy: $percentage %"
 }
 
-# main "$@"
+main
+
 
 # losowe wyswietlanie slowek
-# domyslnie: skrypt pokazuje slowo w jezyku rodzimym i uzytkownik wpisuje obce 
-# lub odwrotnie
-# informacja o poprawnosci
-# za pomoca przelacznika mozna wypowiedziec slowo i wyswietlone lub bez
-# na koncu liczba poprawnych odpowiedzi, blednych i wynik w % 
-
-# co zrobic
-# odpowiednie wyswietlanie slowek
 # wypowiadanie slowek
-#essunia balety
