@@ -5,8 +5,10 @@ separator=";"
 show_foreign=false
 speak=false
 show=true
-stdin=false
 total_words=0
+correct=0
+declare -a words_native # slowka rodzime
+declare -a words_foreign # slowa w jezyku obcym
 
 # pomoc
 display_help() {
@@ -27,7 +29,7 @@ display_help() {
     exit 0
 }
 
-# Parse command line options
+# przetwarzanie przelacznikow
 while getopts ":hs:fcn" opt; do
     case ${opt} in
         h )
@@ -58,39 +60,60 @@ while getopts ":hs:fcn" opt; do
 done
 shift $((OPTIND -1))
 
-if [$# -gt 0]; then
+if (($# > 0))
+then
     # odczytuj slowka z pliku
-    # to trzeba dokonczyc
-    exit 0
+    for file in $@
+    do
+        for line in $(cat $file)
+        do
+            word_native=$(echo $line | cut -d "$separator" -f 1)
+            word_foreign=$(echo $line | cut -d "$separator" -f 2)
+            words_native+=($word_native)
+            words_foreign+=($word_foreign)
+            total_words+=(1)
+        done    
+    done
 else
     # odczytuj slowka z STDIN
     echo "Podaj ilość słówek, które chcesz wprowadzić: "
     read total_words
     echo "Podawaj linijka po linijce słówka w formacie słowo_rodzime"$separator"słowo_obce"
-    for ((i=0; i<total_words; i=i+1))
+    for ((i=0; i<$total_words; i=i+1))
     do
         read line
-        # tutaj trzeba jakos zaimplementowac rozcinanie tej zmiennej line, np z filtrem cut, zeby byl dostep do slowka rodzimego i osobno obcego
-        
+        word_native=$(echo $line | cut -d "$separator" -f 1)
+        word_foreign=$(echo $line | cut -d "$separator" -f 2)
+        words_native+=($word_native)
+        words_foreign+=($word_foreign)
+        total_words+=(1)
     done
 fi
 
-declare -A words_list # slowo_rodzime separator slowo_obce next linijka w pliku
 
-# main ()
-# {
-    
-# }
+main ()
+{
+    for ((i=0; i<$total_words; i=i+1))
+    do
+        if $show_foreign
+        then 
+            echo $words_foreign[$i]
+        else
+
+        fi
+    done
+}
 
 # main "$@"
 
-# slowka podawane w formie z pliku lub STDIN
-# nieograniczona ilosc wprowadzonych plikow
-# slowka odczytywane z pliku slowo_rodzime;slowo_obce
-# separator ustawiany przez uzytkownika GIT
+# losowe wyswietlanie slowek
 # domyslnie: skrypt pokazuje slowo w jezyku rodzimym i uzytkownik wpisuje obce 
 # lub odwrotnie
 # informacja o poprawnosci
-# za pomoca przelacznika mozna wypowiedziec slowo i wyswietlone lub bez GIT
+# za pomoca przelacznika mozna wypowiedziec slowo i wyswietlone lub bez
 # na koncu liczba poprawnych odpowiedzi, blednych i wynik w % 
-# pomoc parametr -h wszystkie parametry i objasnienia GIT
+
+# co zrobic
+# odpowiednie wyswietlanie slowek
+# wypowiadanie slowek
+#essunia balety
