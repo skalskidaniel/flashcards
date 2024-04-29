@@ -154,7 +154,7 @@ main ()
 
 main
 
-
+# DO ZROBIENIA:
 # losowe wyswietlanie slowek
 # wypowiadanie slowek
 # czyszczenie terminala po wyswietleniu i wczytaniu slowka
