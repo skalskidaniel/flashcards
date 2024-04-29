@@ -16,16 +16,32 @@ display_help() {
     echo "FISZKI - ucz się języka z uśmiechem :)"
     echo "         domyślnie program pokazuje słowo w języku rodzimym i uzytkownik wpisuje słowo w języku obcym"
     echo "         za pomocą odpowiednich przełączników mozesz modyfikować ustawienia domyślne"
-    echo "         mozesz podać plik ze słówkami w formacie słowo_rodzime[separator]słowo_obce"
+    echo "         mozesz podać plik ze słówkami w formacie słowo_rodzime<separator>słowo_obce"
     echo "         w przypadku braku pliku wejściowego, słówka zostaną wczytane poprzez standardowe wejście"
     echo ""
     echo "SKŁADNIA"
-    echo "  $0 [-h] [-s separator] [-f] [-b] [-o] [<nazwa_pliku_wejsciowego>]"
+    echo "  $0 [-h] [-s 'separator'] [-f] [-b] [-o] [<nazwa_pliku_wejsciowego>]"
     echo "      -h              Wyświetl pomoc"
-    echo "      -s separator    Zdefiniuj własny separator (domyślnie ':')" # zmienna separator = to co na wejsciu
+    echo "      -s 'separator'  Zdefiniuj własny separator (domyślnie ';')" # zmienna separator = to co na wejsciu
     echo "      -f              Pokazuj obce słowa" # zmienna show_foreign = true
     echo "      -b              Wypowiadaj słowa wraz z wyświetleniem" # zmienna speak = true, show = true
     echo "      -o              Tylko wypowiadaj słowa, bez wyświetlenia" # zmienna speak = true, show = false
+    echo ""
+    echo "------------------------> ENGLISH BELOW <-------------------------"
+    echo ""
+    echo "FLASHCARDS - learn a language with a smile :)"
+    echo "             by default, the program shows a word in the native language and the user enters a word in a foreign language"
+    echo "             using the appropriate switches, you can modify the default settings"
+    echo "             you can provide a file with words in the format native_word<separator>foreign_word"
+    echo "             in the absence of an input file, the words will be loaded through standard input"
+    echo ""
+    echo "SYNTAX"
+    echo "  $0 [-h] [-s 'separator'] [-f] [-b] [-o] [<input_file_name>]"
+    echo "      -h              Display help"
+    echo "      -s 'separator'  Define your own separator (default ';')"
+    echo "      -f              Show foreign words"
+    echo "      -b              Speak words along with display"
+    echo "      -o              Only speak words, without display"
     exit 0
 }
 
@@ -97,9 +113,10 @@ main ()
             # wyświetlaj w obcym języku
             echo "Będę teraz wyświetlał słowa w obcym języku, wpisuj słowa w języku rodzimym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
-            echo ""
+            
             for ((i=0; i<$total_words; i=i+1))
             do
+                echo ""
                 echo ${words_foreign["$i"]}
                 read current_word    
                 if [[ $current_word == "q" ]]
@@ -118,9 +135,9 @@ main ()
             # wyswietlaj w rodzimym jezyku
             echo "Będę teraz wyświetlał słowa w rodzimym języku, wpisuj słowa w języku obcym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
-            echo ""
             for ((i=0; i<$total_words; i=i+1))
             do
+                echo ""
                 echo ${words_native["$i"]}
                 read current_word
                 if [[ $current_word == "q" ]]
@@ -158,3 +175,4 @@ main
 # losowe wyswietlanie slowek
 # wypowiadanie slowek
 # czyszczenie terminala po wyswietleniu i wczytaniu slowka
+# pogrubiona czcionka
