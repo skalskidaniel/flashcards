@@ -71,7 +71,7 @@ then
             word_foreign=$(echo $line | cut -d "$separator" -f 2)
             words_native+=($word_native)
             words_foreign+=($word_foreign)
-            total_words+=(1)
+            total_words=$(($total_words+1))
         done    
     done
 else
@@ -86,60 +86,69 @@ else
         word_foreign=$(echo $line | cut -d "$separator" -f 2)
         words_native+=($word_native)
         words_foreign+=($word_foreign)
-        total_words+=(1)
     done
 fi
 
 
 main ()
 {
-    for ((i=0; i<$total_words; i=i+1))
-    do
-        if $show_foreign
-        then 
+    if $show_foreign
+    then 
             # wyświetlaj w obcym języku
             echo "Będę teraz wyświetlał słowa w obcym języku, wpisuj słowa w języku rodzimym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
-            echo $words_foreign[$i]
-            read current_word
-            if [[$current_word=="q"]]
-            then
-                # koniec gry
-                break
-            elif [[$current_word==$word_native[$i]]]
-                correct+=(1)
-                echo "Dobra odpowiedź!"
-            else
-                echo "Niestety nie tym razem, poprawna odpowiedź to: $words_native[$i]"
-            fi
-        else
+            echo ""
+            for ((i=0; i<$total_words; i=i+1))
+            do
+                echo ${words_foreign["$i"]}
+                read current_word    
+                if [[ $current_word == "q" ]]
+                then
+                    # koniec gry
+                    break    
+                elif [[ $current_word == ${words_native["$i"]} ]]
+                then
+                    correct=$(($correct+1))
+                    echo "Dobra odpowiedź!"
+                else
+                    echo "Niestety nie tym razem, poprawna odpowiedź to: ${words_native["$i"]}"
+                fi
+            done
+    else
             # wyswietlaj w rodzimym jezyku
             echo "Będę teraz wyświetlał słowa w rodzimym języku, wpisuj słowa w języku obcym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
-            echo $words_foreign[$i]
-            read current_word
-            if [[$current_word=="q"]]
-            then
-                # koniec gry
-                break
-            elif [[$current_word==$word_foreign[$i]]]
-                correct+=(1)
-                echo "Dobra odpowiedź!"
-            else
-                echo "Niestety nie tym razem, poprawna odpowiedź to: $words_foreign[$i]"
-            fi
-        fi
-    done
-    percentage=$((($correct/$total_words)*100))
+            echo ""
+            for ((i=0; i<$total_words; i=i+1))
+            do
+                echo ${words_native["$i"]}
+                read current_word
+                if [[ $current_word == "q" ]]
+                then
+                    # koniec gry
+                    break
+                elif [[ $current_word == ${words_foreign["$i"]} ]]
+                then
+                    correct=$(($correct+1))
+                    echo "Dobra odpowiedź!"
+                else
+                    echo "Niestety nie tym razem, poprawna odpowiedź to: ${words_foreign["$i"]}"
+                fi
+            done
+    fi
+
+    
+    echo ""           
+    percentage=$(echo "scale=2; ($correct/$total_words)*100" | bc) # funkcja bc pozwalajaca uzywanie liczb float
     wrong=$(($total_words-$correct))
-    if (($percentage>50))
+    if (( $(echo "$percentage > 50.00" | bc -l) ))
     then
         echo "Super wynik!"
     else
         echo "Musisz się jeszcze pouczyć :("
     fi
     echo "Liczba poprawnych odpowiedzi: $correct"
-    echo "Liczba błędnych odpowiedzi: $wrong" 
+    echo "Liczba błędnych odpowiedzi: $wrong"
     echo "Twój wynik procentowy: $percentage %"
 }
 
@@ -148,3 +157,4 @@ main
 
 # losowe wyswietlanie slowek
 # wypowiadanie slowek
+# czyszczenie terminala po wyswietleniu i wczytaniu slowka
