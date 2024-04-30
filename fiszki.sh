@@ -13,13 +13,13 @@ declare -a words_foreign # slowa w jezyku obcym
 # pomoc
 display_help() {
     echo ""
-    echo "FISZKI - ucz się języka z uśmiechem :)"
+    echo "$(tput bold)FISZKI$(tput sgr0) - ucz się języka z uśmiechem :)"
     echo "         domyślnie program pokazuje słowo w języku rodzimym i uzytkownik wpisuje słowo w języku obcym"
     echo "         za pomocą odpowiednich przełączników mozesz modyfikować ustawienia domyślne"
     echo "         mozesz podać plik ze słówkami w formacie słowo_rodzime<separator>słowo_obce"
     echo "         w przypadku braku pliku wejściowego, słówka zostaną wczytane poprzez standardowe wejście"
     echo ""
-    echo "SKŁADNIA"
+    echo "$(tput bold)SKŁADNIA$(tput sgr0)"
     echo "  $0 [-h] [-s 'separator'] [-f] [-b] [-o] [<nazwa_pliku_wejsciowego>]"
     echo "      -h              Wyświetl pomoc"
     echo "      -s 'separator'  Zdefiniuj własny separator (domyślnie ';')" # zmienna separator = to co na wejsciu
@@ -27,21 +27,8 @@ display_help() {
     echo "      -b              Wypowiadaj słowa wraz z wyświetleniem" # zmienna speak = true, show = true
     echo "      -o              Tylko wypowiadaj słowa, bez wyświetlenia" # zmienna speak = true, show = false
     echo ""
-    echo "------------------------> ENGLISH BELOW <-------------------------"
-    echo ""
-    echo "FLASHCARDS - learn a language with a smile :)"
-    echo "             by default, the program shows a word in the native language and the user enters a word in a foreign language"
-    echo "             using the appropriate switches, you can modify the default settings"
-    echo "             you can provide a file with words in the format native_word<separator>foreign_word"
-    echo "             in the absence of an input file, the words will be loaded through standard input"
-    echo ""
-    echo "SYNTAX"
-    echo "  $0 [-h] [-s 'separator'] [-f] [-b] [-o] [<input_file_name>]"
-    echo "      -h              Display help"
-    echo "      -s 'separator'  Define your own separator (default ';')"
-    echo "      -f              Show foreign words"
-    echo "      -b              Speak words along with display"
-    echo "      -o              Only speak words, without display"
+    echo "$(tput bold)UWAGA$(tput sgr0)"
+    echo "Proszę uzywać '_' zamiast spacji w przypadku wieloczłonowych definicji"
     exit 0
 }
 
@@ -113,13 +100,15 @@ done
 
 main ()
 {
+    clear
     if $show_foreign
     then 
             # wyświetlaj w obcym języku
             echo "Będę teraz wyświetlał słowa w obcym języku, wpisuj słowa w języku rodzimym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
-            sleep 5
-            for((i=9; i>=1; i=i-1))
+            echo "Łączna liczba słówek: $total_words"
+            sleep 7
+            for((i=5; i>1; i=i-1))
             do
                 clear
                 echo $i
@@ -150,10 +139,10 @@ main ()
                 elif [[ $current_word == ${words_native["$current_index"]} ]]
                 then
                     correct=$(($correct+1))
-                    echo "Dobra odpowiedź!"
+                    echo -e "$(tput bold)$(tput setaf 2)Dobra odpowiedź!$(tput sgr0)"
                     sleep 2
                 else
-                    echo "Niestety nie tym razem, poprawna odpowiedź to: ${words_native["$current_index"]}"
+                    echo -e "$(tput bold)$(tput setaf 1)Niestety nie tym razem, poprawna odpowiedź to: ${words_native["$current_index"]}$(tput sgr0)"
                     sleep 4
                 fi
             done
@@ -161,8 +150,9 @@ main ()
             # wyswietlaj w rodzimym jezyku
             echo "Będę teraz wyświetlał słowa w rodzimym języku, wpisuj słowa w języku obcym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
-            sleep 5
-            for((i=9;i>=0;i=i-1))
+            echo "Łączna liczba słówek: $total_words"
+            sleep 7
+            for((i=5;i>0;i=i-1))
             do
                 clear
                 echo $i
@@ -179,25 +169,26 @@ main ()
                 clear
                 if $show
                 then
-                    echo ${words_native["$i"]}
+                    echo ${words_native["$current_index"]}
                 fi
                 if $speak
                 then
-                    say ${words_native["$i"]}
+                    say ${words_native["$current_index"]}
                 fi
                 read current_word
                 if [[ $current_word == "q" ]]
                 then
                     # koniec gry
                     break
-                elif [[ $current_word == ${words_foreign["$i"]} ]]
+                elif [[ $current_word == ${words_foreign["$current_index"]} ]]
                 then
                     correct=$(($correct+1))
-                    echo "Dobra odpowiedź!"
+                    echo -e "$(tput bold)$(tput setaf 2)Dobra odpowiedź!$(tput sgr0)"
                     sleep 2
                 else
-                    echo "Niestety nie tym razem, poprawna odpowiedź to: ${words_foreign["$i"]}"
+                    echo -e "$(tput bold)$(tput setaf 1)Niestety nie tym razem, poprawna odpowiedź to: ${words_foreign["$current_index"]}$(tput sgr0)"
                     sleep 4
+                    
                 fi
             done
     fi
@@ -206,15 +197,16 @@ main ()
     wrong=$(($total_words-$correct))
     if (( $(echo "$percentage > 50.00" | bc -l) ))
     then
-        echo "Super wynik!"
+        echo -e "$(tput bold)$(tput setaf 2)Super wynik!$(tput sgr0)"
     else
-        echo "Musisz się jeszcze pouczyć :("
+        echo -e "$(tput bold)$(tput setaf 1)Musisz się jeszcze pouczyć :($(tput sgr0)"
     fi
     echo "Liczba poprawnych odpowiedzi: $correct"
     echo "Liczba błędnych odpowiedzi: $wrong"
     echo "Twój wynik procentowy: $percentage %"
+    echo ""
     echo "Czy chcesz zagrać jeszcze raz?"
-    echo "Jeśli tak - wciśnij "r" "
+    echo "Jeśli tak - wciśnij "r" i enter "
     echo "Jeśli nie - wciśnij enter"
     read again
     if [[ $again == "r" ]]
@@ -224,7 +216,3 @@ main ()
 }
 
 main
-
-# DO ZROBIENIA:
-# pogrubiona czcionka, kolorowe odpowiedzi zielona - dobra, czerwona - zla
-# nie dzialaja slowa rozdzielone spacja
