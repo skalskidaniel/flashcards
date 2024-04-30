@@ -118,13 +118,22 @@ main ()
             # wyświetlaj w obcym języku
             echo "Będę teraz wyświetlał słowa w obcym języku, wpisuj słowa w języku rodzimym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
-            
+            sleep 5
+            for((i=9; i>=1; i=i-1))
+            do
+                clear
+                echo $i
+                sleep 1
+            done
+            clear
+            echo "START"
+            sleep 1
             while [ ${#queue[@]} -gt 0 ]
             do
                 i=$((RANDOM % ${#queue[@]}))
                 current_index=${queue[$i]}
                 queue=("${queue[@]:0:$i}" "${queue[@]:$((i + 1))}") # usun obslugiwany indeks z kolejki wyboru slowek
-                echo ""
+                clear
                 if $show
                 then
                     echo ${words_foreign["$current_index"]}
@@ -142,20 +151,32 @@ main ()
                 then
                     correct=$(($correct+1))
                     echo "Dobra odpowiedź!"
+                    sleep 2
                 else
                     echo "Niestety nie tym razem, poprawna odpowiedź to: ${words_native["$current_index"]}"
+                    sleep 4
                 fi
             done
     else
             # wyswietlaj w rodzimym jezyku
             echo "Będę teraz wyświetlał słowa w rodzimym języku, wpisuj słowa w języku obcym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
+            sleep 5
+            for((i=9;i>=0;i=i-1))
+            do
+                clear
+                echo $i
+                sleep 1
+            done
+            clear
+            echo "START"
+            sleep 2
             while [ ${#queue[@]} -gt 0 ]
             do
                 i=$((RANDOM % ${#queue[@]}))
                 current_index=${queue[$i]}
                 queue=("${queue[@]:0:$i}" "${queue[@]:$((i + 1))}") # usun obslugiwany indeks z kolejki wyboru slowek
-                echo ""
+                clear
                 if $show
                 then
                     echo ${words_native["$i"]}
@@ -173,14 +194,14 @@ main ()
                 then
                     correct=$(($correct+1))
                     echo "Dobra odpowiedź!"
+                    sleep 2
                 else
                     echo "Niestety nie tym razem, poprawna odpowiedź to: ${words_foreign["$i"]}"
+                    sleep 4
                 fi
             done
     fi
-
-    
-    echo ""           
+    clear         
     percentage=$(echo "scale=2; ($correct/$total_words)*100" | bc) # funkcja bc pozwalajaca uzywanie liczb float
     wrong=$(($total_words-$correct))
     if (( $(echo "$percentage > 50.00" | bc -l) ))
@@ -192,11 +213,18 @@ main ()
     echo "Liczba poprawnych odpowiedzi: $correct"
     echo "Liczba błędnych odpowiedzi: $wrong"
     echo "Twój wynik procentowy: $percentage %"
+    echo "Czy chcesz zagrać jeszcze raz?"
+    echo "Jeśli tak - wciśnij "r" "
+    echo "Jeśli nie - wciśnij enter"
+    read again
+    if [[ $again == "r" ]]
+    then
+        main
+    fi
 }
 
 main
 
 # DO ZROBIENIA:
-# czyszczenie terminala po wyswietleniu i wczytaniu slowka
 # pogrubiona czcionka, kolorowe odpowiedzi zielona - dobra, czerwona - zla
 # nie dzialaja slowa rozdzielone spacja
