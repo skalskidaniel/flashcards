@@ -46,7 +46,7 @@ display_help() {
 }
 
 # przetwarzanie przelacznikow
-while getopts ":hs:fcn" opt; do
+while getopts ":hs:fbo" opt; do
     case ${opt} in
         h )
             display_help
@@ -105,10 +105,10 @@ else
     done
 fi
 
-declare -a indexes # tablica do losowania indeksow slowek
+declare -a queue # tablica do losowania indeksow slowek
 for ((i=0; i<total_words; i++))
 do
-    indexes+=($i)
+    queue+=($i)
 done
 
 main ()
@@ -119,31 +119,51 @@ main ()
             echo "Będę teraz wyświetlał słowa w obcym języku, wpisuj słowa w języku rodzimym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
             
-            for ((i=0; i<$total_words; i=i+1))
+            while [ ${#queue[@]} -gt 0 ]
             do
+                i=$((RANDOM % ${#queue[@]}))
+                current_index=${queue[$i]}
+                queue=("${queue[@]:0:$i}" "${queue[@]:$((i + 1))}") # usun obslugiwany indeks z kolejki wyboru slowek
                 echo ""
-                echo ${words_foreign["$i"]}
+                if $show
+                then
+                    echo ${words_foreign["$current_index"]}
+                fi
+                if $speak
+                then
+                    say ${words_foreign["$current_index"]}
+                fi
                 read current_word    
                 if [[ $current_word == "q" ]]
                 then
                     # koniec gry
                     break    
-                elif [[ $current_word == ${words_native["$i"]} ]]
+                elif [[ $current_word == ${words_native["$current_index"]} ]]
                 then
                     correct=$(($correct+1))
                     echo "Dobra odpowiedź!"
                 else
-                    echo "Niestety nie tym razem, poprawna odpowiedź to: ${words_native["$i"]}"
+                    echo "Niestety nie tym razem, poprawna odpowiedź to: ${words_native["$current_index"]}"
                 fi
             done
     else
             # wyswietlaj w rodzimym jezyku
             echo "Będę teraz wyświetlał słowa w rodzimym języku, wpisuj słowa w języku obcym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
-            for ((i=0; i<$total_words; i=i+1))
+            while [ ${#queue[@]} -gt 0 ]
             do
+                i=$((RANDOM % ${#queue[@]}))
+                current_index=${queue[$i]}
+                queue=("${queue[@]:0:$i}" "${queue[@]:$((i + 1))}") # usun obslugiwany indeks z kolejki wyboru slowek
                 echo ""
-                echo ${words_native["$i"]}
+                if $show
+                then
+                    echo ${words_native["$i"]}
+                fi
+                if $speak
+                then
+                    say ${words_native["$i"]}
+                fi
                 read current_word
                 if [[ $current_word == "q" ]]
                 then
@@ -177,7 +197,6 @@ main ()
 main
 
 # DO ZROBIENIA:
-# losowe wyswietlanie slowek
-# wypowiadanie slowek
 # czyszczenie terminala po wyswietleniu i wczytaniu slowka
 # pogrubiona czcionka, kolorowe odpowiedzi zielona - dobra, czerwona - zla
+# nie dzialaja slowa rozdzielone spacja
