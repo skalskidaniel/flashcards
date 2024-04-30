@@ -1,0 +1,14 @@
+statek;ship
+łódź;boat
+rakieta;rocket
+balon;balloon
+kierowca;driver
+pilot;pilot
+marynarz;sailor
+astronauta;astronaut
+rolnik;farmer
+ogrodnik;gardener
+kucharz;cook
+kelner;waiter
+barman;bartender
+recepcjonista;receptionist
