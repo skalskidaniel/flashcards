@@ -105,6 +105,11 @@ else
     done
 fi
 
+declare -a indexes # tablica do losowania indeksow slowek
+for ((i=0; i<total_words; i++))
+do
+    indexes+=($i)
+done
 
 main ()
 {
@@ -175,4 +180,4 @@ main
 # losowe wyswietlanie slowek
 # wypowiadanie slowek
 # czyszczenie terminala po wyswietleniu i wczytaniu slowka
-# pogrubiona czcionka
+# pogrubiona czcionka, kolorowe odpowiedzi zielona - dobra, czerwona - zla
