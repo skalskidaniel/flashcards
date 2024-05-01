@@ -105,7 +105,7 @@ main ()
     if $show_foreign
     then 
             # wyświetlaj w obcym języku
-            echo "Będę teraz wyświetlał słowa w obcym języku, wpisuj słowa w języku rodzimym"
+            echo "Będę teraz wyświetlał/wypowiadał słowa w obcym języku, wpisuj słowa w języku rodzimym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
             echo "Łączna liczba słówek: $total_words"
             sleep 7
@@ -149,7 +149,7 @@ main ()
             done
     else
             # wyswietlaj w rodzimym jezyku
-            echo "Będę teraz wyświetlał słowa w rodzimym języku, wpisuj słowa w języku obcym"
+            echo "Będę teraz wyświetlał/wypowiadał słowa w rodzimym języku, wpisuj słowa w języku obcym"
             echo "Na końcu wyświetlę Twój wynik, jeśli chcesz zakończyć grę szybciej, zamiast słowa wpisz "q""
             echo "Łączna liczba słówek: $total_words"
             sleep 7
