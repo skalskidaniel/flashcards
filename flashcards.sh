@@ -105,7 +105,7 @@ main ()
     if $show_foreign
     then 
             # display in a foreign language
-            echo "I will now display words in a foreign language, enter words in the native language"
+            echo "I will now display/read words in a foreign language, enter words in the native language"
             echo "At the end, I will display your score, if you want to end the game earlier, instead of a word type "q""
             echo "Total number of words: $total_words"
             sleep 7
@@ -149,7 +149,7 @@ main ()
             done
     else
             # display in the native language
-            echo "I will now display words in the native language, enter words in a foreign language"
+            echo "I will now display/read words in the native language, enter words in a foreign language"
             echo "At the end, I will display your score, if you want to end the game earlier, instead of a word type "q""
             echo "Total number of words: $total_words"
             sleep 7
