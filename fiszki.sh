@@ -6,7 +6,6 @@ show_foreign=false
 speak=false
 show=true
 total_words=0
-correct=0
 declare -a words_native # slowka rodzime
 declare -a words_foreign # slowa w jezyku obcym
 
@@ -23,7 +22,7 @@ display_help() {
     echo "  $0 [-h] [-s 'separator'] [-f] [-b] [-o] [<nazwa_pliku_wejsciowego>]"
     echo "      -h              Wyświetl pomoc"
     echo "      -s 'separator'  Zdefiniuj własny separator (domyślnie ';')" # zmienna separator = to co na wejsciu
-    echo "      -f              Pokazuj obce słowa" # zmienna show_foreign = true
+    echo "      -f              Pokazuj słowa w języku obcym" # zmienna show_foreign = true
     echo "      -b              Wypowiadaj słowa wraz z wyświetleniem" # zmienna speak = true, show = true
     echo "      -o              Tylko wypowiadaj słowa, bez wyświetlenia" # zmienna speak = true, show = false
     echo ""
@@ -92,15 +91,17 @@ else
     done
 fi
 
-declare -a queue # tablica do losowania indeksow slowek
-for ((i=0; i<total_words; i++))
-do
-    queue+=($i)
-done
 
 main ()
 {
     clear
+    correct=0
+    declare -a queue # tablica do losowania indeksow slowek
+    for ((i=0; i<total_words; i++))
+    do
+        queue+=($i)
+    done
+
     if $show_foreign
     then 
             # wyświetlaj w obcym języku
@@ -211,6 +212,7 @@ main ()
     read again
     if [[ $again == "r" ]]
     then
+        unset queue
         main
     fi
 }
