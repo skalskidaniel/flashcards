@@ -6,7 +6,6 @@ show_foreign=false
 speak=false
 show=true
 total_words=0
-correct=0
 declare -a words_native # native words
 declare -a words_foreign # foreign words
 
@@ -92,15 +91,17 @@ else
     done
 fi
 
-declare -a queue # array for drawing word indexes
-for ((i=0; i<total_words; i++))
-do
-    queue+=($i)
-done
 
 main ()
 {
     clear
+    correct=0
+    declare -a queue # array for drawing word indexes
+    for ((i=0; i<total_words; i++))
+    do
+        queue+=($i)
+    done
+
     if $show_foreign
     then 
             # display in a foreign language
