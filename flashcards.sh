@@ -212,6 +212,7 @@ main ()
     read again
     if [[ $again == "r" ]]
     then
+        unset queue
         main
     fi
 }
